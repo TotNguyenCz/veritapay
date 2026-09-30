@@ -34,6 +34,9 @@ export default defineConfig({
       'vite-plugin-node-polyfills/shims/process',
     ],
   },
+  build: {
+    target: 'esnext',
+  },
   server: {
     allowedHosts: true,
     cors: true,
