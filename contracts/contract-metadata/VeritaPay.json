@@ -1,0 +1,1176 @@
+{
+  "contractAddress": "0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
+  "network": "ARC-TESTNET",
+  "deployerWalletId": "3c2464b2-8369-52e2-a782-800bbeca5396",
+  "contract_code_path": "/home/user/app/contracts/VeritaPay.sol",
+  "contract_compiled_code_path": "/home/user/app/contracts/out/VeritaPay.sol/VeritaPay.json",
+  "contract_network_and_links": {
+    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f"
+  },
+  "contract_deployments": [
+    {
+      "chain": "Arc Testnet",
+      "address": "0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
+      "explorerUrl": "https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
+      "txHash": "0xfb8e4584e7ed814db0367d5ce88ae962aeb5a212403c8ca0ebd1091a9d0f39ff",
+      "deployedAt": "2026-09-29T03:42:52.930Z"
+    }
+  ],
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "usdcToken_",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "autoResolveDispute",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "cancelSubscription",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "deactivateService",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "disputePeriod",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getActiveSubscriptions",
+      "inputs": [
+        {
+          "name": "subscriber",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getAllServiceIds",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getCurrentPeriodIndex",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getPeriod",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct VeritaPay.Period",
+          "components": [
+            {
+              "name": "subscriptionId",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "periodIndex",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "periodStart",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "periodEnd",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "state",
+              "type": "uint8",
+              "internalType": "enum VeritaPay.PeriodState"
+            },
+            {
+              "name": "uptimeBps",
+              "type": "uint16",
+              "internalType": "uint16"
+            },
+            {
+              "name": "latencyP99Ms",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            {
+              "name": "errorRateBps",
+              "type": "uint16",
+              "internalType": "uint16"
+            },
+            {
+              "name": "performanceScore",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "paymentAmount",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "evidenceHash",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "attestedAt",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "settledAt",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "disputedAt",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "disputeReason",
+              "type": "string",
+              "internalType": "string"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getServiceListing",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct VeritaPay.ServiceListing",
+          "components": [
+            {
+              "name": "vendor",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "internalType": "string"
+            },
+            {
+              "name": "metadataUri",
+              "type": "string",
+              "internalType": "string"
+            },
+            {
+              "name": "pricePerPeriod",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "periodDuration",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            {
+              "name": "challengeWindow",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            {
+              "name": "gracePeriod",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            {
+              "name": "targetUptimeBps",
+              "type": "uint16",
+              "internalType": "uint16"
+            },
+            {
+              "name": "active",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "createdAt",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getSubscription",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct VeritaPay.Subscription",
+          "components": [
+            {
+              "name": "serviceId",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "subscriber",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "budgetPerPeriod",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "startTime",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "endTime",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "active",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "totalPaid",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "totalPeriods",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "honestPeriods",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lastProcessedPeriodIndex",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getSubscriptionPeriods",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getVendorReputation",
+      "inputs": [
+        {
+          "name": "vendor",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "score",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "honored",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "total",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "totalServices",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getVendorServices",
+      "inputs": [
+        {
+          "name": "vendor",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "markMissed",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "registerService",
+      "inputs": [
+        {
+          "name": "name",
+          "type": "string",
+          "internalType": "string"
+        },
+        {
+          "name": "metadataUri",
+          "type": "string",
+          "internalType": "string"
+        },
+        {
+          "name": "pricePerPeriod",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "periodDuration",
+          "type": "uint32",
+          "internalType": "uint32"
+        },
+        {
+          "name": "challengeWindow",
+          "type": "uint32",
+          "internalType": "uint32"
+        },
+        {
+          "name": "gracePeriod",
+          "type": "uint32",
+          "internalType": "uint32"
+        },
+        {
+          "name": "targetUptimeBps",
+          "type": "uint16",
+          "internalType": "uint16"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "resolveDispute",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "vendorFaultBps",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "submitAttestation",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "uptimeBps",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "latencyP99Ms",
+          "type": "uint32",
+          "internalType": "uint32"
+        },
+        {
+          "name": "errorRateBps",
+          "type": "uint16",
+          "internalType": "uint16"
+        },
+        {
+          "name": "evidenceHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "subscribe",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "budgetPerPeriod",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "duration",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "syncCurrentPeriod",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "triggerAutoSettle",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updateServiceMetadata",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "metadataUri",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "usdcToken",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "contract IERC20"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "vendorStats",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "honoredPeriods",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "totalPeriods",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "totalServices",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "AttestationSubmitted",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "performanceScore",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "paymentAmount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DisputeResolved",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "vendorFaultBps",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "finalPayment",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "name": "previousOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PeriodDisputed",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriber",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PeriodMissed",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PeriodSettled",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "vendor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReputationUpdated",
+      "inputs": [
+        {
+          "name": "vendor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "score",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "honored",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "total",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ServiceDeactivated",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ServiceRegistered",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "vendor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        },
+        {
+          "name": "pricePerPeriod",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ServiceUpdated",
+      "inputs": [
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "metadataUri",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "Subscribed",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "serviceId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriber",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "budgetPerPeriod",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SubscriberDefaulted",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "subscriber",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SubscriptionCancelled",
+      "inputs": [
+        {
+          "name": "subscriptionId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "AlreadyAttested",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ChallengeWindowExpired",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ChallengeWindowOpen",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "GracePeriodActive",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InsufficientAllowance",
+      "inputs": [
+        {
+          "name": "required",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "available",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidAmount",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InvalidParameter",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InvalidState",
+      "inputs": [
+        {
+          "name": "current",
+          "type": "uint8",
+          "internalType": "enum VeritaPay.PeriodState"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "NotFound",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NotSubscriber",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NotVendor",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OwnableInvalidOwner",
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableUnauthorizedAccount",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ReentrancyGuardReentrantCall",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SafeERC20FailedOperation",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ServiceHasActiveSubscriptions",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ServiceNotActive",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SubscriberPaymentDefaulted",
+      "inputs": [
+        {
+          "name": "periodId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "Unauthorized",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroAddress",
+      "inputs": []
+    }
+  ]
+}

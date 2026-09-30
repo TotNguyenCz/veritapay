@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARC LIGHT (default)
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --bg: #ffffff;
+  --bg-gradient: linear-gradient(160deg, #f4f6fb 0%, #fdfaf6 55%, #f6f3f0 100%);
+  --surface: rgba(255, 255, 255, 0.80);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --surface-muted: #f3f4f8;
+  --ink: #111827;
+  --ink-2: #374151;
+  --muted: #6b7280;
+  --subtle: #9ca3af;
+  --border: rgba(17, 24, 39, 0.10);
+  --border-strong: rgba(17, 24, 39, 0.22);
+  --accent: #122d45;
+  --accent-hover: #1a4a75;
+  --accent-fg: #ffffff;
+  --focus: #93c5fd;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --score-high: #16a34a;
+  --score-mid: #d97706;
+  --score-low: #dc2626;
+
+  /* Glass inner fill (light) */
+  --glass-inner-bg: rgba(255, 255, 255, 0.55);
+
+  /* Input / form */
+  --input-bg: rgba(255, 255, 255, 0.85);
+  --input-border: rgba(17, 24, 39, 0.18);
+  --input-placeholder: #9ca3af;
+
+  /* Overlay / sheet backdrop */
+  --overlay: rgba(17, 24, 39, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ARC DARK — applied when <html class="dark"> is set
+   ───────────────────────────────────────────────────────────────────────────── */
+.dark {
+  --bg: #0d1b2f;
+  --bg-gradient: linear-gradient(160deg, #0d1b2f 0%, #111e35 55%, #122d45 100%);
+  --surface: rgba(255, 255, 255, 0.07);
+  --surface-strong: rgba(255, 255, 255, 0.11);
+  --surface-muted: #1a2840;
+  --ink: #f0f4fc;
+  --ink-2: #dce8f5;
+  --muted: #94a3b8;
+  --subtle: #64748b;
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(203, 219, 242, 0.40);
+  --accent: #acc6e9;
+  --accent-hover: #ccddf5;
+  --accent-fg: #0d1b2f;
+  --focus: #3b82f6;
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
+  --score-high: #4ade80;
+  --score-mid: #fbbf24;
+  --score-low: #f87171;
+
+  /* Glass inner fill (dark) */
+  --glass-inner-bg: rgba(255, 255, 255, 0.05);
+
+  /* Input / form */
+  --input-bg: rgba(255, 255, 255, 0.07);
+  --input-border: rgba(255, 255, 255, 0.16);
+  --input-placeholder: #64748b;
+
+  /* Overlay / sheet backdrop */
+  --overlay: rgba(0, 0, 0, 0.60);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE RESET
+   ───────────────────────────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100dvh;
+  background: var(--bg-gradient);
+  color: var(--ink);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TYPOGRAPHY HELPERS
+   ───────────────────────────────────────────────────────────────────────────── */
+.display {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', Menlo, monospace;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SCROLLBAR
+   ───────────────────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLASS SURFACES
+   ───────────────────────────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--surface);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.glass-inner {
+  background: var(--glass-inner-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   STATE BADGE COLORS
+   ───────────────────────────────────────────────────────────────────────────── */
+.badge-pending  { background: rgba(249,168,37,0.14); color: var(--warning); }
+.badge-attested { background: rgba(59,130,246,0.14); color: #3b82f6; }
+.badge-settled  { background: rgba(22,163,74,0.14);  color: var(--success); }
+.badge-disputed { background: rgba(220,38,38,0.14);  color: var(--danger); }
+.badge-resolved { background: rgba(107,114,128,0.14);color: var(--muted); }
+.badge-missed   { background: rgba(220,38,38,0.09);  color: var(--danger); }
+
+/* Dark mode badge overrides — alpha values that worked on light need a boost */
+.dark .badge-pending  { background: rgba(251,191,36,0.18); }
+.dark .badge-attested { background: rgba(96,165,250,0.18); color: #60a5fa; }
+.dark .badge-settled  { background: rgba(74,222,128,0.18); }
+.dark .badge-disputed { background: rgba(248,113,113,0.18); }
+.dark .badge-resolved { background: rgba(148,163,184,0.18); }
+.dark .badge-missed   { background: rgba(248,113,113,0.14); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   INPUT BASE
+   ───────────────────────────────────────────────────────────────────────────── */
+input, textarea, select {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--ink);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   FOCUS RING
+   ───────────────────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SONNER TOASTER
+   ───────────────────────────────────────────────────────────────────────────── */
+[data-sonner-toaster] { --width: 360px !important; }
+
+/* Dark mode toast surface */
+.dark [data-sonner-toast] {
+  background: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+  color: var(--ink) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CONNECTKIT DARK OVERRIDES
+   ───────────────────────────────────────────────────────────────────────────── */
+.dark [data-rk], .dark [class*="ck-"] {
+  color-scheme: dark;
+}

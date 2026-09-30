@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.output/
+contracts/out/
+contracts/cache/
+
+# Environment variables — NEVER commit
+.env
+.env.local
+.env.*.local
+
+# Circle secrets — NEVER commit
+.circle/
+recovery_file*
+entity_secret*
+
+# Logs
+*.log
+/tmp/
+
+# Arc Studio internal capture files
+console.jsonl
+traces.jsonl
+
+# Drizzle generated (keep migrations, ignore kit cache)
+drizzle/.drizzle/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Bun
+.bun/
+
+# TypeScript
+*.tsbuildinfo
