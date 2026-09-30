@@ -1,4 +1,4 @@
-# VeritaPay — Tài liệu dự án
+# VeritaPay — Tài liệu dự án x
 
 Bộ tài liệu đầy đủ cho dự án VeritaPay. Đọc theo thứ tự dưới đây khi onboarding.
 
