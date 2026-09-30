@@ -1,5 +1,6 @@
-import { ShieldCheck, Zap, BarChart3, ArrowRight } from 'lucide-react'
+import { Zap, BarChart3, ArrowRight, ShieldCheck } from 'lucide-react'
 import { ConnectKitButton } from 'connectkit'
+import { VeritaPayLockup } from '@/components/shared/VeritaPayLogo'
 
 interface Props {
   onEnterApp: () => void
@@ -10,17 +11,17 @@ export function LandingHero({ onEnterApp }: Props) {
     <div className="min-h-dvh flex flex-col" style={{ background: 'var(--bg-gradient)' }}>
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5 max-w-7xl mx-auto w-full">
-        <div className="flex items-center gap-2.5">
-          <div className="size-8 rounded-xl flex items-center justify-center" style={{ background: 'var(--accent)' }}>
-            <ShieldCheck className="size-4 text-white" />
-          </div>
-          <span className="display text-lg font-bold" style={{ color: 'var(--ink)' }}>VeritaPay</span>
-        </div>
+        <VeritaPayLockup size="md" />
         <ConnectKitButton />
       </nav>
 
       {/* Hero */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 pt-12 pb-20 text-center max-w-3xl mx-auto">
+        {/* Hero mark — large version */}
+        <div className="mb-6 flex justify-center">
+          <VeritaPayLockup size="lg" />
+        </div>
+
         <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold mb-8"
           style={{ background: 'rgba(18,45,69,0.08)', color: 'var(--accent)' }}>
           <Zap className="size-3" />

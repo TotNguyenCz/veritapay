@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
-import { ShieldCheck, LayoutGrid, User, Building2 } from 'lucide-react'
+import { LayoutGrid, User, Building2 } from 'lucide-react'
+import { VeritaPayLockup } from '@/components/shared/VeritaPayLogo'
 
 import { LandingHero } from '@/components/LandingHero'
 import { ServiceMarketplace } from '@/components/ServiceMarketplace'
@@ -27,13 +28,10 @@ function AppShell() {
       {/* Top nav */}
       <header className="sticky top-0 z-40 border-b" style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', borderColor: 'var(--border)' }}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5 shrink-0">
-            <div className="size-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent)' }}>
-              <ShieldCheck className="size-3.5" style={{ color: 'var(--accent-fg)' }} />
-            </div>
-            <span className="display text-base font-bold" style={{ color: 'var(--ink)' }}>VeritaPay</span>
+          <div className="flex items-center gap-3 shrink-0">
+            <VeritaPayLockup size="sm" />
             {VERITAPAY_ADDRESS && (
-              <span className="ml-1 rounded-full px-2 py-0.5 text-xs font-semibold"
+              <span className="rounded-full px-2 py-0.5 text-xs font-semibold"
                 style={{ background: 'rgba(22,163,74,0.14)', color: 'var(--success)' }}>
                 Deployed
               </span>

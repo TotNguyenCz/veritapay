@@ -1,5 +1,6 @@
-import { ShieldCheck, Github, ExternalLink, Zap } from 'lucide-react'
+import { Github, ExternalLink, Zap } from 'lucide-react'
 import { VERITAPAY_ADDRESS, TARGET_CHAIN_ID } from '@/veritapay-config'
+import { VeritaPayLockup } from '@/components/shared/VeritaPayLogo'
 
 const CONTRACT_URL = VERITAPAY_ADDRESS
   ? `https://explorer.testnet.arc.io/address/${VERITAPAY_ADDRESS}`
@@ -51,17 +52,7 @@ export function AppFooter() {
 
           {/* Brand column */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2.5">
-              <div
-                className="size-8 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: 'var(--accent)' }}
-              >
-                <ShieldCheck className="size-4" style={{ color: 'var(--accent-fg)' }} />
-              </div>
-              <span className="display text-lg font-bold" style={{ color: 'var(--ink)' }}>
-                VeritaPay
-              </span>
-            </div>
+            <VeritaPayLockup size="md" />
 
             <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
               Performance-attested subscription billing on Arc. Vendors commit
