@@ -8,6 +8,7 @@ import { ServiceMarketplace } from '@/components/ServiceMarketplace'
 import { SubscriberDashboard } from '@/components/SubscriberDashboard'
 import { VendorDashboard } from '@/components/VendorDashboard'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { AppFooter } from '@/components/AppFooter'
 import { VERITAPAY_ADDRESS } from '@/veritapay-config'
 
 type Tab = 'marketplace' | 'subscriber' | 'vendor'
@@ -80,6 +81,8 @@ function AppShell() {
           </div>
         )}
       </div>
+
+      <AppFooter />
     </div>
   )
 }
