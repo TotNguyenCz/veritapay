@@ -3,15 +3,6 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/api/health",                              "destination": "/api/health" },
-    { "source": "/api/stats",                               "destination": "/api/stats" },
-    { "source": "/api/services",                            "destination": "/api/services" },
-    { "source": "/api/services/:serviceId/subscriptions",   "destination": "/api/services/[serviceId]" },
-    { "source": "/api/services/:serviceId",                 "destination": "/api/services/[serviceId]" },
-    { "source": "/api/subscriptions/:id/periods",           "destination": "/api/subscriptions/[id]" },
-    { "source": "/api/subscriptions/:id",                   "destination": "/api/subscriptions/[id]" },
-    { "source": "/api/vendor/:addr/services",               "destination": "/api/vendor/[addr]" },
-    { "source": "/api/vendor/:addr/attestations",           "destination": "/api/vendor/[addr]" },
-    { "source": "/(.*)",                                    "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
