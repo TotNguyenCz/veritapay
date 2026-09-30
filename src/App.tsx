@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
-import { LayoutGrid, User, Building2 } from 'lucide-react'
+import { LayoutGrid, User, Building2, BookOpen } from 'lucide-react'
 import { VeritaPayLockup } from '@/components/shared/VeritaPayLogo'
 
 import { LandingHero } from '@/components/LandingHero'
@@ -10,12 +10,19 @@ import { SubscriberDashboard } from '@/components/SubscriberDashboard'
 import { VendorDashboard } from '@/components/VendorDashboard'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { AppFooter } from '@/components/AppFooter'
+import { DocsPage } from '@/components/DocsPage'
 import { VERITAPAY_ADDRESS } from '@/veritapay-config'
 
+type View = 'app' | 'docs'
 type Tab = 'marketplace' | 'subscriber' | 'vendor'
 
 function AppShell() {
+  const [view, setView] = useState<View>('app')
   const [tab, setTab] = useState<Tab>('marketplace')
+
+  if (view === 'docs') {
+    return <DocsPage onBack={() => setView('app')} />
+  }
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'marketplace', label: 'Marketplace', icon: <LayoutGrid className="size-4" /> },
@@ -57,6 +64,17 @@ function AppShell() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setView('docs')}
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all"
+              style={{ color: 'var(--muted)', background: 'var(--surface-muted)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--muted)' }}
+              aria-label="Documentation"
+            >
+              <BookOpen className="size-3.5" />
+              <span className="hidden sm:inline">Docs</span>
+            </button>
             <ThemeToggle />
             <ConnectKitButton />
           </div>
@@ -80,7 +98,7 @@ function AppShell() {
         )}
       </div>
 
-      <AppFooter />
+      <AppFooter onNavigateDocs={() => setView('docs')} />
     </div>
   )
 }
