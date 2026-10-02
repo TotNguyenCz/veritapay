@@ -1,0 +1,20 @@
+[build]
+  command   = "bun run build"
+  publish   = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# /api/* → Netlify Function (must come BEFORE the SPA catch-all)
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/api"
+  status = 200
+  force  = true
+
+# SPA fallback — all other routes → index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
