@@ -31,7 +31,7 @@ function AppShell() {
   ]
 
   return (
-    <div className="min-h-dvh" style={{ background: 'var(--bg-gradient)' }}>
+    <div className="min-h-dvh flex flex-col" style={{ background: 'var(--bg-gradient)' }}>
       {/* Top nav */}
       <header className="sticky top-0 z-40 border-b" style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', borderColor: 'var(--border)' }}>
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between gap-4">
@@ -82,7 +82,7 @@ function AppShell() {
       </header>
 
       {/* Content */}
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-8">
         {tab === 'marketplace' && <ServiceMarketplace />}
         {tab === 'subscriber' && <SubscriberDashboard />}
         {tab === 'vendor' && <VendorDashboard />}
