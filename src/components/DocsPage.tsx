@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm'
 import { BookOpen, ChevronRight, Menu, X, ArrowLeft, ExternalLink } from 'lucide-react'
 import { VeritaPayLockup } from '@/components/shared/VeritaPayLogo'
 
-// Import raw markdown — Vite ?raw suffix, no plugin needed
+// ── Vietnamese docs ────────────────────────────────────────────────────────────
 import readmeMd        from '../../docs/README.md?raw'
 import overviewMd      from '../../docs/PROJECT_OVERVIEW.md?raw'
 import techStackMd     from '../../docs/TECH_STACK.md?raw'
@@ -12,58 +12,88 @@ import designSystemMd  from '../../docs/DESIGN_SYSTEM.md?raw'
 import codingStdMd     from '../../docs/CODING_STANDARDS.md?raw'
 import workflowMd      from '../../docs/WORKFLOW.md?raw'
 
+// ── English docs ───────────────────────────────────────────────────────────────
+import readmeMdEn        from '../../docs/en/README.md?raw'
+import overviewMdEn      from '../../docs/en/PROJECT_OVERVIEW.md?raw'
+import techStackMdEn     from '../../docs/en/TECH_STACK.md?raw'
+import designSystemMdEn  from '../../docs/en/DESIGN_SYSTEM.md?raw'
+import codingStdMdEn     from '../../docs/en/CODING_STANDARDS.md?raw'
+import workflowMdEn      from '../../docs/en/WORKFLOW.md?raw'
+
+type Lang = 'vi' | 'en'
+
 interface DocEntry {
   slug: string
-  label: string
+  label: Record<Lang, string>
   icon: string
-  content: string
-  description: string
+  content: Record<Lang, string>
+  description: Record<Lang, string>
 }
 
 const DOCS: DocEntry[] = [
   {
     slug: 'overview',
-    label: 'Getting Started',
+    label: { vi: 'Getting Started', en: 'Getting Started' },
     icon: '🚀',
-    content: readmeMd,
-    description: 'Quick start và links quan trọng',
+    content: { vi: readmeMd, en: readmeMdEn },
+    description: {
+      vi: 'Quick start và links quan trọng',
+      en: 'Quick start and important links',
+    },
   },
   {
     slug: 'project',
-    label: 'Project Overview',
+    label: { vi: 'Tổng quan dự án', en: 'Project Overview' },
     icon: '🎯',
-    content: overviewMd,
-    description: 'Mục tiêu, tính năng, kiến trúc tổng quan',
+    content: { vi: overviewMd, en: overviewMdEn },
+    description: {
+      vi: 'Mục tiêu, tính năng, kiến trúc tổng quan',
+      en: 'Goals, features, architecture overview',
+    },
   },
   {
     slug: 'tech-stack',
-    label: 'Tech Stack',
+    label: { vi: 'Tech Stack', en: 'Tech Stack' },
     icon: '⚙️',
-    content: techStackMd,
-    description: 'Dependencies, cấu trúc thư mục, scripts',
+    content: { vi: techStackMd, en: techStackMdEn },
+    description: {
+      vi: 'Dependencies, cấu trúc thư mục, scripts',
+      en: 'Dependencies, directory structure, scripts',
+    },
   },
   {
     slug: 'design-system',
-    label: 'Design System',
+    label: { vi: 'Design System', en: 'Design System' },
     icon: '🎨',
-    content: designSystemMd,
-    description: 'Tokens, components, typography, UI/UX',
+    content: { vi: designSystemMd, en: designSystemMdEn },
+    description: {
+      vi: 'Tokens, components, typography, UI/UX',
+      en: 'Tokens, components, typography, UI/UX',
+    },
   },
   {
     slug: 'coding-standards',
-    label: 'Coding Standards',
+    label: { vi: 'Coding Standards', en: 'Coding Standards' },
     icon: '📐',
-    content: codingStdMd,
-    description: 'Style, naming, patterns, rules',
+    content: { vi: codingStdMd, en: codingStdMdEn },
+    description: {
+      vi: 'Style, naming, patterns, rules',
+      en: 'Style, naming, patterns, rules',
+    },
   },
   {
     slug: 'workflow',
-    label: 'Workflow',
+    label: { vi: 'Workflow', en: 'Workflow' },
     icon: '🔄',
-    content: workflowMd,
-    description: 'Commit rules, review process, quality gates',
+    content: { vi: workflowMd, en: workflowMdEn },
+    description: {
+      vi: 'Commit rules, review process, quality gates',
+      en: 'Commit rules, review process, quality gates',
+    },
   },
 ]
+
+const LANG_KEY = 'veritapay_docs_lang'
 
 interface Props {
   onBack: () => void
@@ -73,14 +103,27 @@ interface Props {
 export function DocsPage({ onBack, initialSlug }: Props) {
   const [activeSlug, setActiveSlug] = useState(initialSlug ?? 'overview')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [lang, setLang] = useState<Lang>(() => {
+    try {
+      const stored = localStorage.getItem(LANG_KEY)
+      return stored === 'en' ? 'en' : 'vi'
+    } catch {
+      return 'vi'
+    }
+  })
   const contentRef = useRef<HTMLDivElement>(null)
 
   const activeDoc = DOCS.find((d) => d.slug === activeSlug) ?? DOCS[0]
 
-  // Scroll to top when doc changes
+  // Persist language preference
+  useEffect(() => {
+    try { localStorage.setItem(LANG_KEY, lang) } catch { /* noop */ }
+  }, [lang])
+
+  // Scroll to top when doc or language changes
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [activeSlug])
+  }, [activeSlug, lang])
 
   // Close sidebar on escape
   useEffect(() => {
@@ -88,6 +131,8 @@ export function DocsPage({ onBack, initialSlug }: Props) {
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [])
+
+  const toggleLang = () => setLang((l) => (l === 'vi' ? 'en' : 'vi'))
 
   return (
     <div className="min-h-dvh flex flex-col" style={{ background: 'var(--bg-gradient)' }}>
@@ -113,10 +158,7 @@ export function DocsPage({ onBack, initialSlug }: Props) {
 
         <VeritaPayLockup size="sm" />
 
-        <div
-          className="mx-2 h-5 w-px shrink-0"
-          style={{ background: 'var(--border)' }}
-        />
+        <div className="mx-2 h-5 w-px shrink-0" style={{ background: 'var(--border)' }} />
 
         <div className="flex items-center gap-1.5" style={{ color: 'var(--muted)' }}>
           <BookOpen className="size-3.5 shrink-0" />
@@ -126,10 +168,34 @@ export function DocsPage({ onBack, initialSlug }: Props) {
         {/* Breadcrumb */}
         <div className="hidden sm:flex items-center gap-1 ml-1" style={{ color: 'var(--subtle)' }}>
           <ChevronRight className="size-3.5" />
-          <span className="text-sm">{activeDoc.label}</span>
+          <span className="text-sm">{activeDoc.label[lang]}</span>
         </div>
 
         <div className="flex-1" />
+
+        {/* Language toggle */}
+        <div
+          className="flex items-center rounded-lg p-0.5 gap-0.5"
+          style={{ background: 'var(--surface-muted)' }}
+          role="group"
+          aria-label="Select documentation language"
+        >
+          {(['vi', 'en'] as Lang[]).map((l) => (
+            <button
+              key={l}
+              onClick={toggleLang}
+              aria-pressed={lang === l}
+              className="rounded-md px-2.5 py-1 text-xs font-semibold transition-all"
+              style={
+                lang === l
+                  ? { background: 'var(--accent)', color: 'var(--accent-fg)' }
+                  : { color: 'var(--muted)', background: 'transparent' }
+              }
+            >
+              {l === 'vi' ? '🇻🇳 VI' : '🇬🇧 EN'}
+            </button>
+          ))}
+        </div>
 
         {/* Back to app */}
         <button
@@ -140,7 +206,7 @@ export function DocsPage({ onBack, initialSlug }: Props) {
           onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--muted)' }}
         >
           <ArrowLeft className="size-3.5" />
-          Back to App
+          <span className="hidden sm:inline">{lang === 'vi' ? 'Về App' : 'Back to App'}</span>
         </button>
       </header>
 
@@ -162,14 +228,11 @@ export function DocsPage({ onBack, initialSlug }: Props) {
             'lg:translate-x-0',
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
           ].join(' ')}
-          style={{
-            background: 'var(--surface-strong)',
-            borderColor: 'var(--border)',
-          }}
+          style={{ background: 'var(--surface-strong)', borderColor: 'var(--border)' }}
         >
           <div className="p-4">
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--subtle)' }}>
-              Documentation
+              {lang === 'vi' ? 'Tài liệu' : 'Documentation'}
             </p>
             <nav className="flex flex-col gap-0.5">
               {DOCS.map((doc) => {
@@ -193,11 +256,9 @@ export function DocsPage({ onBack, initialSlug }: Props) {
                   >
                     <span className="text-base leading-none mt-0.5 shrink-0">{doc.icon}</span>
                     <span>
-                      <span className="block font-semibold leading-snug">{doc.label}</span>
-                      <span
-                        className="block text-xs leading-snug mt-0.5 opacity-70"
-                      >
-                        {doc.description}
+                      <span className="block font-semibold leading-snug">{doc.label[lang]}</span>
+                      <span className="block text-xs leading-snug mt-0.5 opacity-70">
+                        {doc.description[lang]}
                       </span>
                     </span>
                   </button>
@@ -218,7 +279,7 @@ export function DocsPage({ onBack, initialSlug }: Props) {
               onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--muted)' }}
             >
               <ExternalLink className="size-3.5 shrink-0" />
-              View on GitHub
+              {lang === 'vi' ? 'Xem trên GitHub' : 'View on GitHub'}
             </a>
           </div>
         </aside>
@@ -237,16 +298,18 @@ export function DocsPage({ onBack, initialSlug }: Props) {
                   className="text-2xl font-bold"
                   style={{ color: 'var(--ink)', fontFamily: "'Space Grotesk', sans-serif" }}
                 >
-                  {activeDoc.label}
+                  {activeDoc.label[lang]}
                 </h1>
               </div>
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>{activeDoc.description}</p>
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                {activeDoc.description[lang]}
+              </p>
             </div>
 
             {/* Markdown content */}
             <div className="docs-prose">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {activeDoc.content}
+                {activeDoc.content[lang]}
               </ReactMarkdown>
             </div>
 
@@ -268,11 +331,16 @@ export function DocsPage({ onBack, initialSlug }: Props) {
                       >
                         <ArrowLeft className="size-4 shrink-0" />
                         <span>
-                          <span className="block text-xs opacity-60 mb-0.5">Previous</span>
-                          <span className="block text-sm font-semibold" style={{ color: 'var(--ink)' }}>{prev.icon} {prev.label}</span>
+                          <span className="block text-xs opacity-60 mb-0.5">
+                            {lang === 'vi' ? 'Trước' : 'Previous'}
+                          </span>
+                          <span className="block text-sm font-semibold" style={{ color: 'var(--ink)' }}>
+                            {prev.icon} {prev.label[lang]}
+                          </span>
                         </span>
                       </button>
                     ) : <div className="flex-1" />}
+
                     {next ? (
                       <button
                         onClick={() => setActiveSlug(next.slug)}
@@ -282,8 +350,12 @@ export function DocsPage({ onBack, initialSlug }: Props) {
                         onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)' }}
                       >
                         <span>
-                          <span className="block text-xs opacity-60 mb-0.5">Next</span>
-                          <span className="block text-sm font-semibold" style={{ color: 'var(--ink)' }}>{next.icon} {next.label}</span>
+                          <span className="block text-xs opacity-60 mb-0.5">
+                            {lang === 'vi' ? 'Tiếp' : 'Next'}
+                          </span>
+                          <span className="block text-sm font-semibold" style={{ color: 'var(--ink)' }}>
+                            {next.icon} {next.label[lang]}
+                          </span>
                         </span>
                         <ChevronRight className="size-4 shrink-0" />
                       </button>
