@@ -12,6 +12,7 @@
 
 import './tracing'
 import './console-capture'
+import { Analytics } from '@vercel/analytics/react'
 
 import { StrictMode, useState, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -66,6 +67,7 @@ createRoot(document.getElementById('root')!).render(
         <ThemedProviders>
           <App />
           <Toaster position="top-center" />
+          <Analytics />
         </ThemedProviders>
       </QueryClientProvider>
     </WagmiProvider>
