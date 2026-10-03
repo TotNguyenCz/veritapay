@@ -14,7 +14,8 @@ VeritaPay is a performance-attested subscription billing protocol on Arc Testnet
 
 | Contract | Chain | Address | Explorer |
 |---|---|---|---|
-| VeritaPay | Arc Testnet (5042002) | 0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f | https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f |
+| VeritaPay v1 (deprecated) | Arc Testnet (5042002) | 0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f | https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f |
+| VeritaPay v2 (active) | Arc Testnet (5042002) | 0x1f2636bf08d97fb95261967347173b0fa0f77ec3 | https://explorer.testnet.arc.io/address/0x1f2636bf08d97fb95261967347173b0fa0f77ec3 |
 
 USDC (Arc Testnet): 0x3600000000000000000000000000000000000000
 

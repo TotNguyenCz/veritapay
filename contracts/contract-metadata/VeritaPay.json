@@ -1,13 +1,20 @@
 {
-  "contractAddress": "0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
+  "contractAddress": "0x1f2636bf08d97fb95261967347173b0fa0f77ec3",
   "network": "ARC-TESTNET",
   "deployerWalletId": "3c2464b2-8369-52e2-a782-800bbeca5396",
   "contract_code_path": "/home/user/app/contracts/VeritaPay.sol",
   "contract_compiled_code_path": "/home/user/app/contracts/out/VeritaPay.sol/VeritaPay.json",
   "contract_network_and_links": {
-    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f"
+    "Arc Testnet": "https://explorer.testnet.arc.io/address/0x1f2636bf08d97fb95261967347173b0fa0f77ec3"
   },
   "contract_deployments": [
+    {
+      "chain": "Arc Testnet",
+      "address": "0x1f2636bf08d97fb95261967347173b0fa0f77ec3",
+      "explorerUrl": "https://explorer.testnet.arc.io/address/0x1f2636bf08d97fb95261967347173b0fa0f77ec3",
+      "txHash": "0xe67e5f0223f54f0eea22871132a1537f3b94d58c207c89ecf2960268af387bfe",
+      "deployedAt": "2026-10-03T04:57:22.794Z"
+    },
     {
       "chain": "Arc Testnet",
       "address": "0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",

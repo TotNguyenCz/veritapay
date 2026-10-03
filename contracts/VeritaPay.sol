@@ -3,6 +3,7 @@
 // Vendor submits signed performance attestations each billing period.
 // USDC auto-settles proportionally after an uncontested challenge window.
 // Subscriber reputation scores are public on-chain — any contract can read them.
+// Redeployed: 2026-10-03 (fresh state)
 pragma solidity ^0.8.20;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
