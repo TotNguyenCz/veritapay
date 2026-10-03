@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useRefreshAll } from '@/hooks/useRefreshAll'
 import { toast } from 'sonner'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -28,6 +29,7 @@ const GRACE_OPTS = [
 ]
 
 export function RegisterServiceSheet({ onClose }: Props) {
+  const refreshAll = useRefreshAll()
   const [name, setName] = useState('')
   const [metadataUri, setMetadataUri] = useState('')
   const [price, setPrice] = useState('')
@@ -54,7 +56,7 @@ export function RegisterServiceSheet({ onClose }: Props) {
       args: [name.trim(), metadataUri.trim(), priceRaw, period, challengeWindow, gracePeriod, targetUptimeBps],
       chainId: TARGET_CHAIN_ID,
     }, {
-      onSuccess: () => { toast.success('Service registered!'); setTimeout(onClose, 1800) },
+      onSuccess: () => { toast.success('Service registered!'); refreshAll(); setTimeout(onClose, 1800) },
       onError: (e) => toast.error('Registration failed: ' + e.message.slice(0, 100)),
     })
   }

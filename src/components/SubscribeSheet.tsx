@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi'
+import { useRefreshAll } from '@/hooks/useRefreshAll'
 import { erc20Abi } from 'viem'
 import { toast } from 'sonner'
 import { X } from 'lucide-react'
@@ -33,6 +34,7 @@ const DURATION_OPTIONS = [
 
 export function SubscribeSheet({ serviceId, service, onClose }: Props) {
   const { address } = useAccount()
+  const refreshAll = useRefreshAll()
   const defaultBudget = Amount.fromRaw(service.pricePerPeriod, USDC_FACT.decimals).toFixed(2)
 
   const [budget, setBudget] = useState(defaultBudget)
@@ -74,7 +76,7 @@ export function SubscribeSheet({ serviceId, service, onClose }: Props) {
       args: [VERITAPAY_ADDRESS, maxApproval],
       chainId: TARGET_CHAIN_ID,
     }, {
-      onSuccess: () => toast.success('USDC spending approved'),
+      onSuccess: () => { toast.success('USDC spending approved'); refreshAll() },
       onError: (e) => toast.error('Approval failed: ' + e.message.slice(0, 80)),
     })
   }
@@ -87,7 +89,7 @@ export function SubscribeSheet({ serviceId, service, onClose }: Props) {
       args: [serviceId, budgetRaw, BigInt(duration)],
       chainId: TARGET_CHAIN_ID,
     }, {
-      onSuccess: () => { toast.success('Subscribed!'); setTimeout(onClose, 1800) },
+      onSuccess: () => { toast.success('Subscribed!'); refreshAll(); setTimeout(onClose, 1800) },
       onError: (e) => toast.error('Subscribe failed: ' + e.message.slice(0, 100)),
     })
   }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useRefreshAll } from '@/hooks/useRefreshAll'
 import { toast } from 'sonner'
 import { X, AlertTriangle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -9,6 +10,7 @@ import { TxButton } from '@/components/shared/TxButton'
 interface Props { periodId: bigint; onClose: () => void }
 
 export function DisputeSheet({ periodId, onClose }: Props) {
+  const refreshAll = useRefreshAll()
   const [reason, setReason] = useState('')
   const { writeContract, data: hash, isPending } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
@@ -18,7 +20,7 @@ export function DisputeSheet({ periodId, onClose }: Props) {
       address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'disputePeriod',
       args: [periodId, reason.trim()], chainId: TARGET_CHAIN_ID,
     }, {
-      onSuccess: () => { toast.success('Dispute submitted'); setTimeout(onClose, 1800) },
+      onSuccess: () => { toast.success('Dispute submitted'); refreshAll(); setTimeout(onClose, 1800) },
       onError: (e) => toast.error('Failed: ' + e.message.slice(0, 100)),
     })
   }

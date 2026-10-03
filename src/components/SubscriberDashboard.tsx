@@ -6,6 +6,7 @@
 
 import { useState } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useRefreshAll } from '@/hooks/useRefreshAll'
 import { erc20Abi } from 'viem'
 import { toast } from 'sonner'
 import { CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Database } from 'lucide-react'
@@ -69,6 +70,7 @@ function DbPeriodRow({ p }: { p: DbPeriod }) {
 
 // ── Live contract period row (settle / dispute actions) ───────────────────────
 function LivePeriodRow({ periodId, serviceId }: { periodId: bigint; serviceId: bigint }) {
+  const refreshAll = useRefreshAll()
   const { data: period } = useReadContract({
     address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'getPeriod',
     args: [periodId], chainId: TARGET_CHAIN_ID,
@@ -144,14 +146,14 @@ function LivePeriodRow({ periodId, serviceId }: { periodId: bigint; serviceId: b
       <div className="flex gap-2 flex-wrap">
         {challengeWindowOver && (
           <TxButton
-            onClick={() => triggerSettle({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'triggerAutoSettle', args: [periodId], chainId: TARGET_CHAIN_ID })}
+            onClick={() => triggerSettle({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'triggerAutoSettle', args: [periodId], chainId: TARGET_CHAIN_ID }, { onSuccess: refreshAll })}
             isPending={settlePending} isConfirming={settleConfirming}
             label="Settle now" variant="primary"
           />
         )}
         {gracePeriodOver && (
           <TxButton
-            onClick={() => markMissed({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'markMissed', args: [periodId], chainId: TARGET_CHAIN_ID })}
+            onClick={() => markMissed({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'markMissed', args: [periodId], chainId: TARGET_CHAIN_ID }, { onSuccess: refreshAll })}
             isPending={missedPending} isConfirming={missedConfirming}
             label="Mark missed" variant="ghost"
           />
@@ -233,6 +235,7 @@ function SubscriptionCard({ subscriptionId }: { subscriptionId: bigint }) {
   })
 
   const { writeContract: cancel } = useWriteContract()
+  const refreshAll = useRefreshAll()
   const [activeView, setActiveView] = useState<ActiveView | null>(null)
 
   if (!sub || !service) return (
@@ -257,7 +260,7 @@ function SubscriptionCard({ subscriptionId }: { subscriptionId: bigint }) {
             <button
               onClick={() => cancel(
                 { address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'cancelSubscription', args: [subscriptionId], chainId: TARGET_CHAIN_ID },
-                { onSuccess: () => toast.success('Subscription cancelled') },
+                { onSuccess: () => { toast.success('Subscription cancelled'); refreshAll() } },
               )}
               className="text-xs px-2.5 py-1 rounded-lg"
               style={{ background: 'rgba(220,38,38,0.08)', color: 'var(--danger)' }}

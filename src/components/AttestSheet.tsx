@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useRefreshAll } from '@/hooks/useRefreshAll'
 import { toast } from 'sonner'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -10,6 +11,7 @@ import { TxButton } from '@/components/shared/TxButton'
 interface Props { periodId: bigint; onClose: () => void }
 
 export function AttestSheet({ periodId, onClose }: Props) {
+  const refreshAll = useRefreshAll()
   const [uptime, setUptime] = useState('99.9')
   const [latency, setLatency] = useState('120')
   const [errorRate, setErrorRate] = useState('0.1')
@@ -35,7 +37,7 @@ export function AttestSheet({ periodId, onClose }: Props) {
       args: [periodId, uptimeBps, latencyMs, errorRateBps, evidenceHash],
       chainId: TARGET_CHAIN_ID,
     }, {
-      onSuccess: () => { toast.success('Attestation submitted'); setTimeout(onClose, 1800) },
+      onSuccess: () => { toast.success('Attestation submitted'); refreshAll(); setTimeout(onClose, 1800) },
       onError: (e) => toast.error('Attestation failed: ' + e.message.slice(0, 100)),
     })
   }
