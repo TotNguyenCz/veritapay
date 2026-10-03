@@ -7,25 +7,25 @@
  */
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { flushApiCache } from './useApiCache'
 
 export function useRefreshAll() {
   const qc = useQueryClient()
 
   const invalidate = useCallback(() => {
-    // wagmi v2 stores read queries under the 'readContract' queryKey type.
-    // Invalidating all queries that contain 'readContract' / 'readContracts'
-    // makes every useReadContract hook refetch without needing explicit refs.
+    // 1. Invalidate all wagmi contract-read cache entries
     void qc.invalidateQueries({ predicate: (q) => {
       const key = q.queryKey
       if (!Array.isArray(key)) return false
       const first = key[0]
-      // wagmi v2 query keys: [{ type, ... }]
       if (typeof first === 'object' && first !== null) {
         const t = (first as { type?: string }).type ?? ''
         return t === 'readContract' || t === 'readContracts' || t === 'balance'
       }
       return false
     }})
+    // 2. Flush all active useApi listeners (ProtocolStats, DB-backed lists)
+    flushApiCache()
   }, [qc])
 
   return invalidate

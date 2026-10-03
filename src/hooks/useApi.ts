@@ -7,6 +7,7 @@
  */
 
 import { useReducer, useEffect, useCallback, useRef } from 'react'
+import { registerApiListener } from './useApiCache'
 
 interface State<T> {
   data: T | null
@@ -77,11 +78,13 @@ export function useApi<T>(
     if (opts?.refreshInterval) {
       timerRef.current = setInterval(() => { void doFetch() }, opts.refreshInterval)
     }
+    // Register with global API cache so useRefreshAll can trigger immediate refetch
+    const unregister = registerApiListener(() => { void doFetch() })
     return () => {
       clearTimeout(id)
       if (timerRef.current) clearInterval(timerRef.current)
-      // Abort any pending request on cleanup (path change or unmount)
       abortRef.current?.abort()
+      unregister()
     }
   }, [doFetch, opts?.refreshInterval])
 
