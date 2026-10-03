@@ -16,7 +16,8 @@ export const config = createConfig({
   chains: [arcTestnet, mainnet], // mainnet needed for ENS resolution
   connectors: [injected()],
   transports: {
-    [arcTestnet.id]: http(),
+    // Arc Testnet public RPC — supports both read and write (eth_sendRawTransaction)
+    [arcTestnet.id]: http('https://rpc.testnet.arc.io'),
     [mainnet.id]: http(), // ENS resolution uses mainnet
   },
 })

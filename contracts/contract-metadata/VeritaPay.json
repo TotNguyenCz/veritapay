@@ -13,6 +13,13 @@
       "address": "0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
       "explorerUrl": "https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
       "txHash": "0xfb8e4584e7ed814db0367d5ce88ae962aeb5a212403c8ca0ebd1091a9d0f39ff",
+      "deployedAt": "2026-10-03T04:37:15.001Z"
+    },
+    {
+      "chain": "Arc Testnet",
+      "address": "0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
+      "explorerUrl": "https://explorer.testnet.arc.io/address/0x00004e3d9f50cf3ea828cfccf65dba8c33444e1f",
+      "txHash": "0xfb8e4584e7ed814db0367d5ce88ae962aeb5a212403c8ca0ebd1091a9d0f39ff",
       "deployedAt": "2026-09-29T03:42:52.930Z"
     }
   ],
