@@ -43,22 +43,19 @@ export function AttestSheet({ periodId, onClose }: Props) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-end justify-center"
+        className="fixed inset-0 z-50 flex items-center justify-center px-4"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" />
         <motion.section
-          className="relative w-full max-w-lg overflow-hidden rounded-t-3xl"
-          style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(40px) saturate(200%)', WebkitBackdropFilter: 'blur(40px) saturate(200%)' }}
-          initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+          className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto rounded-2xl"
+          style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(40px) saturate(200%)', WebkitBackdropFilter: 'blur(40px) saturate(200%)', border: '1px solid var(--border)' }}
+          initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
           transition={{ type: 'spring', damping: 30, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="h-1" style={{ background: 'linear-gradient(90deg, #16a34a, #22c55e)' }} />
-          <div className="flex justify-center pt-3 pb-1">
-            <div className="h-1 w-10 rounded-full bg-black/10" />
-          </div>
+          <div className="h-1 rounded-t-2xl" style={{ background: 'linear-gradient(90deg, #16a34a, #22c55e)' }} />
           <div className="px-6 pb-8 pt-3">
             <div className="flex items-center justify-between mb-5">
               <div>

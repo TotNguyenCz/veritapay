@@ -62,15 +62,15 @@ export function RegisterServiceSheet({ onClose }: Props) {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-end justify-center"
+        className="fixed inset-0 z-50 flex items-center justify-center px-4"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <div className="absolute inset-0 backdrop-blur-sm" style={{ background: 'var(--overlay)' }} />
         <motion.section
-          className="relative w-full max-w-lg overflow-hidden rounded-t-3xl"
-          style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(40px) saturate(200%)', WebkitBackdropFilter: 'blur(40px) saturate(200%)', borderTop: '1px solid var(--border)' }}
-          initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+          className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto rounded-2xl"
+          style={{ background: 'var(--surface-strong)', backdropFilter: 'blur(40px) saturate(200%)', WebkitBackdropFilter: 'blur(40px) saturate(200%)', border: '1px solid var(--border)' }}
+          initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
           transition={{ type: 'spring', damping: 30, stiffness: 300 }}
           onClick={(e) => e.stopPropagation()}
         >
