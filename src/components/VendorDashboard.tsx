@@ -297,7 +297,9 @@ export function VendorDashboard() {
     </div>
   )
 
+  const repLoaded = reputation !== undefined
   const [score, honored, total] = reputation ?? [6666n, 0n, 0n, 0n]
+  const hasHistory = repLoaded && total > 0n
 
   // Aggregate from DB
   const totalSettled = dbServices
@@ -319,16 +321,33 @@ export function VendorDashboard() {
         </div>
 
         {/* Reputation card */}
-        <div className="glass-card px-5 py-4 text-center min-w-[140px]">
-          <div className="display text-3xl font-bold tabular-nums mb-0.5"
-            style={{ color: scoreColor(score) }}>
-            {formatScorePct(score)}
-          </div>
-          <div className="text-xs mb-0.5" style={{ color: 'var(--muted)' }}>Reputation score</div>
+        <div className="glass-card px-5 py-4 text-center min-w-[150px]">
+          {!repLoaded ? (
+            <div className="h-9 w-24 mx-auto rounded-lg animate-pulse mb-1" style={{ background: 'var(--border)' }} />
+          ) : !hasHistory ? (
+            <div className="display text-2xl font-bold mb-0.5" style={{ color: 'var(--subtle)' }}>—</div>
+          ) : (
+            <div className="display text-3xl font-bold tabular-nums mb-0.5" style={{ color: scoreColor(score) }}>
+              {formatScorePct(score)}
+            </div>
+          )}
+          <div className="text-xs font-semibold mb-0.5" style={{ color: 'var(--muted)' }}>Reputation score</div>
           <div className="text-xs tabular-nums" style={{ color: 'var(--subtle)' }}>
-            {honored.toString()}/{total.toString()} honored
+            {repLoaded ? `${honored.toString()}/${total.toString()} honored` : '—'}
           </div>
-          <div className="text-xs mt-0.5" style={{ color: 'var(--subtle)' }}>Bayesian · on-chain</div>
+          <div className="flex items-center justify-center gap-1 mt-1.5">
+            <span className="text-xs" style={{ color: 'var(--subtle)' }}>Bayesian · on-chain</span>
+            <span
+              title="Score = (honored + 2) / (total + 3). Starts neutral at 66.66% with no history. Updates after each settled, missed, or resolved period."
+              className="cursor-help text-xs rounded-full border px-1.5 leading-4"
+              style={{ color: 'var(--subtle)', borderColor: 'var(--border)' }}
+            >?</span>
+          </div>
+          {repLoaded && !hasHistory && (
+            <div className="mt-1.5 text-xs italic" style={{ color: 'var(--subtle)' }}>
+              Builds after first period
+            </div>
+          )}
         </div>
       </div>
 
