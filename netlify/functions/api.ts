@@ -19,6 +19,7 @@ import {
   attestations,
   disputes,
 } from '../../server/db/schema.js'
+import { syncEvents } from '../../api/_sync.js'
 
 // ── DB singleton ──────────────────────────────────────────────────────────────
 const rawUrl = process.env.DATABASE_URL ?? ''
@@ -95,6 +96,10 @@ export default async function handler(req: Request): Promise<Response> {
 
   // Guard: all routes below need DATABASE_URL
   if (!rawUrl) return unavailable('DATABASE_URL not configured')
+
+  // Sync recent on-chain events into DB before every read
+  // Non-blocking: errors are logged but don't fail the request
+  await syncEvents().catch((e) => console.error('[api] sync error:', e))
 
   try {
     // ── /stats ──────────────────────────────────────────────────────────────

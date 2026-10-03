@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { eq } from 'drizzle-orm'
 import { db } from '../../_db.js'
+import { syncEvents } from '../../_sync.js'
 import { subscriptions } from '../../../server/db/schema.js'
 
 const ETH_ADDR = /^0x[0-9a-fA-F]{40}$/i
@@ -13,6 +14,7 @@ function ser(v: unknown) {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   if (req.method === 'OPTIONS') return res.status(204).end()
+  await syncEvents().catch((e) => console.error('[api] sync error:', e))
   const id = String(req.query.id)
   try {
     // /api/subscriptions/0x... — all subs for an address

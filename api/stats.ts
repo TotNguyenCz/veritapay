@@ -1,10 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { eq, sql } from 'drizzle-orm'
 import { db } from './_db.js'
+import { syncEvents } from './_sync.js'
 import { services, subscriptions, periods } from '../server/db/schema.js'
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*')
+  await syncEvents().catch((e) => console.error('[api] sync error:', e))
   try {
     const [svcCount] = await db.select({ count: sql<number>`count(*)::int` }).from(services)
     const [subCount] = await db.select({ count: sql<number>`count(*)::int` }).from(subscriptions)
