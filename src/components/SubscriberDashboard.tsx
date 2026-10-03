@@ -4,7 +4,7 @@
  * the contract; the DB panel shows the complete paginated history.
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { useRefreshAll } from '@/hooks/useRefreshAll'
 import { erc20Abi } from 'viem'
@@ -83,10 +83,13 @@ function LivePeriodRow({ periodId, serviceId }: { periodId: bigint; serviceId: b
   })
 
   const { writeContract: triggerSettle, data: settleHash, isPending: settlePending } = useWriteContract()
-  const { isLoading: settleConfirming } = useWaitForTransactionReceipt({ hash: settleHash })
+  const { isLoading: settleConfirming, isSuccess: settleConfirmed } = useWaitForTransactionReceipt({ hash: settleHash })
 
   const { writeContract: markMissed, data: missedHash, isPending: missedPending } = useWriteContract()
-  const { isLoading: missedConfirming } = useWaitForTransactionReceipt({ hash: missedHash })
+  const { isLoading: missedConfirming, isSuccess: missedConfirmed } = useWaitForTransactionReceipt({ hash: missedHash })
+
+  useEffect(() => { if (settleConfirmed) refreshAll() }, [settleConfirmed]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (missedConfirmed) refreshAll() }, [missedConfirmed]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [showDispute, setShowDispute] = useState(false)
 
@@ -146,14 +149,14 @@ function LivePeriodRow({ periodId, serviceId }: { periodId: bigint; serviceId: b
       <div className="flex gap-2 flex-wrap">
         {challengeWindowOver && (
           <TxButton
-            onClick={() => triggerSettle({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'triggerAutoSettle', args: [periodId], chainId: TARGET_CHAIN_ID }, { onSuccess: refreshAll })}
+            onClick={() => triggerSettle({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'triggerAutoSettle', args: [periodId], chainId: TARGET_CHAIN_ID })}
             isPending={settlePending} isConfirming={settleConfirming}
             label="Settle now" variant="primary"
           />
         )}
         {gracePeriodOver && (
           <TxButton
-            onClick={() => markMissed({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'markMissed', args: [periodId], chainId: TARGET_CHAIN_ID }, { onSuccess: refreshAll })}
+            onClick={() => markMissed({ address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'markMissed', args: [periodId], chainId: TARGET_CHAIN_ID })}
             isPending={missedPending} isConfirming={missedConfirming}
             label="Mark missed" variant="ghost"
           />
@@ -234,9 +237,18 @@ function SubscriptionCard({ subscriptionId }: { subscriptionId: bigint }) {
     query: { enabled: !!VERITAPAY_ADDRESS, refetchInterval: 12000 },
   })
 
-  const { writeContract: cancel } = useWriteContract()
+  const { writeContract: cancel, data: cancelHash } = useWriteContract()
+  const { isSuccess: cancelConfirmed } = useWaitForTransactionReceipt({ hash: cancelHash })
   const refreshAll = useRefreshAll()
   const [activeView, setActiveView] = useState<ActiveView | null>(null)
+
+  // Refresh list once cancel tx is confirmed on-chain
+  useEffect(() => {
+    if (cancelConfirmed) {
+      toast.success('Subscription cancelled')
+      refreshAll()
+    }
+  }, [cancelConfirmed]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!sub || !service) return (
     <div className="glass-card p-5 animate-pulse">
@@ -260,7 +272,7 @@ function SubscriptionCard({ subscriptionId }: { subscriptionId: bigint }) {
             <button
               onClick={() => cancel(
                 { address: VERITAPAY_ADDRESS, abi: VERITAPAY_ABI, functionName: 'cancelSubscription', args: [subscriptionId], chainId: TARGET_CHAIN_ID },
-                { onSuccess: () => { toast.success('Subscription cancelled'); refreshAll() } },
+                { onSuccess: () => toast.success('Cancellation submitted — confirming...') },
               )}
               className="text-xs px-2.5 py-1 rounded-lg"
               style={{ background: 'rgba(220,38,38,0.08)', color: 'var(--danger)' }}
