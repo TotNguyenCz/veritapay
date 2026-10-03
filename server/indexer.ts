@@ -30,7 +30,16 @@ import {
 
 const ARC_TESTNET_CHAIN_ID = 5042002
 const CONTRACT_ADDRESS = (process.env.VITE_VERITAPAY_ADDRESS ?? '') as Address
-const DEPLOY_BLOCK = 0n
+
+// H-03 fix: Start scanning from the actual deploy block to avoid full chain
+// scan from block 0. VITE_VERITAPAY_DEPLOY_BLOCK is optional — set it in .env
+// to the block number at which the contract was deployed. Falls back to 0 if
+// not set (safe but expensive on a cold start).
+const DEPLOY_BLOCK: bigint = (() => {
+  const raw = process.env.VITE_VERITAPAY_DEPLOY_BLOCK
+  if (!raw) return 0n
+  try { return BigInt(raw) } catch { return 0n }
+})()
 
 // Build RPC URL from proxy env when Arc_Testnet is in the proxy chain list;
 // otherwise fall back to ARC_TESTNET_RPC_URL from .env (set by the server setup).
@@ -469,7 +478,9 @@ export async function startIndexer() {
           getLastBlock('PeriodDisputed'),
         ])
 
-      const fromOrGenesis = (last: bigint) => (last === DEPLOY_BLOCK ? DEPLOY_BLOCK : last + 1n)
+      // If cursor is at or before deploy block, start from deploy block
+      // to avoid scanning the entire chain history on cold start (H-03 fix)
+      const fromOrGenesis = (last: bigint) => (last <= DEPLOY_BLOCK ? DEPLOY_BLOCK : last + 1n)
 
       await Promise.all([
         lastService < latestBlock  && processServiceRegistered(fromOrGenesis(lastService), latestBlock),

@@ -1,6 +1,9 @@
 /**
  * useApi — lightweight typed fetch hook for the VeritaPay REST API.
  * The Vite dev-server proxy rewrites /api/* → http://localhost:3001/*.
+ *
+ * M-02 fix: AbortController cancels in-flight requests when path changes or
+ * component unmounts, preventing stale responses from overwriting newer data.
  */
 
 import { useReducer, useEffect, useCallback, useRef } from 'react'
@@ -37,19 +40,33 @@ export function useApi<T>(
 ): ApiState<T> {
   const [state, dispatch] = useReducer(reducer<T>, { data: null, loading: false, error: null })
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  // M-02 fix: track current AbortController so stale responses are discarded
+  const abortRef = useRef<AbortController | null>(null)
 
   const doFetch = useCallback(async () => {
     if (!path) return
+
+    // Cancel any in-flight request before starting a new one
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+
     dispatch({ type: 'start' })
     try {
-      const res = await fetch(`/api${path}`)
+      const res = await fetch(`/api${path}`, { signal: controller.signal })
+      // If this request was aborted, ignore the result
+      if (controller.signal.aborted) return
       if (!res.ok) {
         const body = await res.json().catch(() => ({ error: res.statusText })) as { error?: string }
         throw new Error(body?.error ?? res.statusText)
       }
       const json = await res.json() as T
-      dispatch({ type: 'ok', data: json })
+      if (!controller.signal.aborted) {
+        dispatch({ type: 'ok', data: json })
+      }
     } catch (e) {
+      // DOMException with name 'AbortError' means the request was intentionally cancelled
+      if (e instanceof DOMException && e.name === 'AbortError') return
       dispatch({ type: 'err', error: e instanceof Error ? e.message : 'fetch error' })
     }
   }, [path])
@@ -63,6 +80,8 @@ export function useApi<T>(
     return () => {
       clearTimeout(id)
       if (timerRef.current) clearInterval(timerRef.current)
+      // Abort any pending request on cleanup (path change or unmount)
+      abortRef.current?.abort()
     }
   }, [doFetch, opts?.refreshInterval])
 

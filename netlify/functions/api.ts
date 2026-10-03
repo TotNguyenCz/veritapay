@@ -2,8 +2,10 @@
  * Netlify Function v2 — handles all /api/* routes in one function.
  * Format: export default async (req: Request) => Response
  *
- * Routing via URL path matching (replaces Vercel file-based routing).
- * Uses the same _db.ts shared client as the Vercel functions.
+ * Fixes applied:
+ *  - C-01: Use correct schema field names (vendor, blockNumber — not vendorAddress/attestedAtTs)
+ *  - H-02: err() defaults to 400, not 500; explicit status on every call
+ *  - H-04: Added /vendor/:addr/attestations and /disputes/:addr routes
  */
 
 import { eq, desc, sql } from 'drizzle-orm'
@@ -15,6 +17,7 @@ import {
   subscriptions,
   periods,
   attestations,
+  disputes,
 } from '../../server/db/schema.js'
 
 // ── DB singleton ──────────────────────────────────────────────────────────────
@@ -47,33 +50,35 @@ function ser(v: unknown): unknown {
   ))
 }
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(ser(data)), {
     status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
+    headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
   })
 }
 
-function err(msg: string, status = 500): Response {
-  return json({ error: msg }, status)
+// H-02 fix: separate defaults — 404 for not-found, 400 for bad request
+function notFound(msg = 'Not found'): Response { return json({ error: msg }, 404) }
+function badRequest(msg: string): Response { return json({ error: msg }, 400) }
+function serverError(msg: string): Response { return json({ error: msg }, 500) }
+function unavailable(msg: string): Response { return json({ error: msg }, 503) }
+
+/** Parse a bigint from a string; returns null on failure (safe, no throw) */
+function parseBigInt(s: string): bigint | null {
+  try { return BigInt(s) } catch { return null }
 }
 
 // ── Router ────────────────────────────────────────────────────────────────────
 export default async function handler(req: Request): Promise<Response> {
+  // CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    })
+    return new Response(null, { status: 204, headers: CORS_HEADERS })
   }
 
   const url = new URL(req.url)
@@ -83,15 +88,16 @@ export default async function handler(req: Request): Promise<Response> {
     .replace(/^\/api/, '')
     || '/'
 
-  // /health
+  // /health — does NOT require DB
   if (raw === '/health' || raw === '') {
     return json({ status: 'ok', ts: Date.now() })
   }
 
-  if (!rawUrl) return err('DATABASE_URL not configured', 503)
+  // Guard: all routes below need DATABASE_URL
+  if (!rawUrl) return unavailable('DATABASE_URL not configured')
 
   try {
-    // /stats
+    // ── /stats ──────────────────────────────────────────────────────────────
     if (raw === '/stats') {
       const [svcCount] = await db.select({ count: sql<number>`count(*)::int` }).from(services)
       const [subCount] = await db.select({ count: sql<number>`count(*)::int` }).from(subscriptions)
@@ -114,7 +120,7 @@ export default async function handler(req: Request): Promise<Response> {
       })
     }
 
-    // /services
+    // ── /services ────────────────────────────────────────────────────────────
     if (raw === '/services') {
       const rows = await db.query.services.findMany({
         orderBy: [desc(services.createdAtTs)],
@@ -122,21 +128,11 @@ export default async function handler(req: Request): Promise<Response> {
       return json(rows)
     }
 
-    // /services/:id
-    const svcMatch = raw.match(/^\/services\/(\d+)$/)
-    if (svcMatch) {
-      const id = BigInt(svcMatch[1])
-      const row = await db.query.services.findFirst({
-        where: eq(services.serviceId, id),
-      })
-      if (!row) return err('Not found', 404)
-      return json(row)
-    }
-
-    // /services/:id/subscriptions
+    // ── /services/:id/subscriptions (must match before /services/:id) ────────
     const svcSubsMatch = raw.match(/^\/services\/(\d+)\/subscriptions$/)
     if (svcSubsMatch) {
-      const id = BigInt(svcSubsMatch[1])
+      const id = parseBigInt(svcSubsMatch[1])
+      if (!id) return badRequest('Invalid service id')
       const rows = await db.query.subscriptions.findMany({
         where: eq(subscriptions.serviceId, id),
         orderBy: [desc(subscriptions.startedAtTs)],
@@ -144,21 +140,23 @@ export default async function handler(req: Request): Promise<Response> {
       return json(rows)
     }
 
-    // /subscriptions/:id
-    const subMatch = raw.match(/^\/subscriptions\/(\d+)$/)
-    if (subMatch) {
-      const id = BigInt(subMatch[1])
-      const row = await db.query.subscriptions.findFirst({
-        where: eq(subscriptions.subscriptionId, id),
+    // ── /services/:id ────────────────────────────────────────────────────────
+    const svcMatch = raw.match(/^\/services\/(\d+)$/)
+    if (svcMatch) {
+      const id = parseBigInt(svcMatch[1])
+      if (!id) return badRequest('Invalid service id')
+      const row = await db.query.services.findFirst({
+        where: eq(services.serviceId, id),
       })
-      if (!row) return err('Not found', 404)
+      if (!row) return notFound('Service not found')
       return json(row)
     }
 
-    // /subscriptions/:id/periods
+    // ── /subscriptions/:id/periods (must match before /subscriptions/:id) ───
     const subPeriodsMatch = raw.match(/^\/subscriptions\/(\d+)\/periods$/)
     if (subPeriodsMatch) {
-      const id = BigInt(subPeriodsMatch[1])
+      const id = parseBigInt(subPeriodsMatch[1])
+      if (!id) return badRequest('Invalid subscription id')
       const rows = await db.query.periods.findMany({
         where: eq(periods.subscriptionId, id),
         orderBy: [desc(periods.periodIndex)],
@@ -166,31 +164,56 @@ export default async function handler(req: Request): Promise<Response> {
       return json(rows)
     }
 
-    // /vendor/:addr/services
+    // ── /subscriptions/:id ───────────────────────────────────────────────────
+    const subMatch = raw.match(/^\/subscriptions\/(\d+)$/)
+    if (subMatch) {
+      const id = parseBigInt(subMatch[1])
+      if (!id) return badRequest('Invalid subscription id')
+      const row = await db.query.subscriptions.findFirst({
+        where: eq(subscriptions.subscriptionId, id),
+      })
+      if (!row) return notFound('Subscription not found')
+      return json(row)
+    }
+
+    // ── /vendor/:addr/services ────────────────────────────────────────────────
+    // C-01 fix: use services.vendor (not vendorAddress)
     const vendorSvcMatch = raw.match(/^\/vendor\/(0x[0-9a-fA-F]{40})\/services$/)
     if (vendorSvcMatch) {
       const addr = vendorSvcMatch[1].toLowerCase()
       const rows = await db.query.services.findMany({
-        where: eq(services.vendorAddress, addr),
+        where: eq(services.vendor, addr),     // ← C-01 fix
         orderBy: [desc(services.createdAtTs)],
       })
       return json(rows)
     }
 
-    // /vendor/:addr/attestations
+    // ── /vendor/:addr/attestations ────────────────────────────────────────────
+    // C-01 fix: use attestations.vendor + attestations.blockNumber (not vendorAddress/attestedAtTs)
     const vendorAttestMatch = raw.match(/^\/vendor\/(0x[0-9a-fA-F]{40})\/attestations$/)
     if (vendorAttestMatch) {
       const addr = vendorAttestMatch[1].toLowerCase()
       const rows = await db.query.attestations.findMany({
-        where: eq(attestations.vendorAddress, addr),
-        orderBy: [desc(attestations.attestedAtTs)],
+        where: eq(attestations.vendor, addr),       // ← C-01 fix
+        orderBy: [desc(attestations.blockNumber)],  // ← C-01 fix
       })
       return json(rows)
     }
 
-    return err('Not found', 404)
+    // ── /disputes/:addr (H-04 fix: added) ────────────────────────────────────
+    const disputesMatch = raw.match(/^\/disputes\/(0x[0-9a-fA-F]{40})$/)
+    if (disputesMatch) {
+      const addr = disputesMatch[1].toLowerCase()
+      const rows = await db.query.disputes.findMany({
+        where: eq(disputes.subscriber, addr),
+        orderBy: [desc(disputes.blockNumber)],
+      })
+      return json(rows)
+    }
+
+    return notFound()
   } catch (e) {
-    console.error('[api]', e)
-    return err(String(e), 500)
+    console.error('[api] unhandled error:', e)
+    return serverError(e instanceof Error ? e.message : String(e))
   }
 }
